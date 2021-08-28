@@ -2,15 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-      {% if title %}
-      <title>{{ title }} - Enclave7</title>
-      {% else %}
-      <title>Welcome to Enclave7</title>
-      {% endif %}
-    </head>
-    <body>
-        <div>Enclave7: <a href="/index">Home</a></div>
+    {% if title %}
+    <title>{{ title }} - Enclave7</title>
+    {% else %}
+    <title>Welcome to Enclave7</title>
+    {% endif %}
+</head>
+<body>
+        <div>
+            Enclave7:
+            <a href="/index">Home</a>
+            <a href="/login">Login</a>
+        </div>
         <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </body>
 </html>
