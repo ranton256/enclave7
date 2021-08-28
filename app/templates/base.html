@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+      {% if title %}
+      <title>{{ title }} - Enclave7</title>
+      {% else %}
+      <title>Welcome to Enclave7</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Enclave7: <a href="/index">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
