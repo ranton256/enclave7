@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import app
-from app.forms import LoginForm, RegistrationForm
-from app.models import User
+from app.forms import LoginForm, RegistrationForm, PostForm
+from app.models import User, Post
 from app import db
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -59,4 +59,20 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/post', methods=['GET', 'POST'])
+@login_required
+def post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.body.data, user_id=current_user.id)
+        db.session.add(post)
+        db.session.commit()
+        # TODO: check this sanitizes message.
+        flash('You posted {}'.format(post.body))
+        # redirect to clear form
+        return redirect(url_for('post'))
+    return render_template('post.html', title='Post Message', form=form)
+        
+
 
