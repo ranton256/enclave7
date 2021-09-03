@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
+	<h1>Messages</h1>
+	{# TODO: sort by oldest to newest #}
+	<ul>
+		{% for post in posts %}
+		<li>
+		<span class="posted-on">
+		{{ post.timestamp|e7formatdatetime }}
+		</span>
+		<span class="posted-by">{{ post.username }}: </span>
+		<span class="post-body">{{ post.body }}</span>
+		</li>
+		{% endfor %}
+	</ul>
     <h1>Post a Message</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
             {{ form.body.label }}<br>
-            {{ form.body(size=320) }}<br>
+            {{ form.body(size=320,autofocus=true) }}<br>
             {% for error in form.body.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
