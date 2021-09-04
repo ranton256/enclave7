@@ -84,9 +84,9 @@ def format_datetime(value, format="%d %b %Y %I:%M %p"):
     return value.strftime(format)
 
 
-@app.route('/post', methods=['GET', 'POST'])
+@app.route('/board', methods=['GET', 'POST'])
 @login_required
-def post():
+def board():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(body=form.body.data, user_id=current_user.id)
@@ -95,7 +95,7 @@ def post():
         # TODO: check this sanitizes message.
         flash('You posted {}'.format(post.body))
         # redirect to clear form
-        return redirect(url_for('post'))
+        return redirect(url_for('board'))
     #posts = Post.query.all()
     s = select([User,Post]).where(Post.user_id == User.id)
     results = db.session.execute(s)
@@ -106,7 +106,7 @@ def post():
         post = dict_from_obj(p)
         post['username'] = u.username
         posts.append(post)
-    return render_template('post.html', title='Post Message', form=form, posts=posts)
+    return render_template('board.html', title='Message Board', form=form, posts=posts)
         
 
 
