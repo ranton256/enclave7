@@ -7,6 +7,16 @@ from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql import select
 
 
+@app.errorhandler(404)
+def not_found_err(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def not_found_err(error):
+    return render_template('500.html'), 500
+
+
 @app.route('/')
 @app.route('/index')
 @login_required
