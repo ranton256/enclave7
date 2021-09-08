@@ -12,4 +12,9 @@ login = LoginManager(app)
 
 login.login_view = 'login'
 
+# max file size
+app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
+app.config['UPLOAD_PATH'] = 'uploads'
+
 from app import routes, models

@@ -1,10 +1,12 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, send_from_directory
 from app import app
 from app.forms import LoginForm, RegistrationForm, PostForm
 from app.models import User, Post
 from app import db
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql import select
+from werkzeug.utils import secure_filename
+import os
 
 
 @app.errorhandler(404)
@@ -108,5 +110,39 @@ def board():
         posts.append(post)
     return render_template('board.html', title='Message Board', form=form, posts=posts)
         
+# TODO: validate file contents as actual image.
 
+# TODO: include images as:
+# url_for('static', filename='avatars/' + str(user_id))
 
+@app.route('/uploads/<filename>')
+@login_required
+def upload(filename):
+    # TODO: This should be absolute, probably
+    root_dir = os.getcwd()
+    #print("root_dir is", root_dir)  # TODO:
+    return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_PATH']), filename)
+
+@app.route('/upload_image', methods=['POST'])
+@login_required
+def upload_image():
+    uploaded_file = request.files['file']
+    filename = uploaded_file.filename
+    print('your filename was', filename) # TODO: real log
+
+    filename = secure_filename(filename)
+    print("filename is", filename)
+    if filename != '':
+        file_ext = os.path.splitext(filename)[1]
+        print("file_ext is", file_ext)
+        if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+            abort(400)
+        save_path = os.path.join(app.config['UPLOAD_PATH'], filename)
+        # TODO: real logging
+        print("Saving uploaded file to", filename)
+        flash('Your image was uploaded to {}'.format(url_for('upload', filename=filename)))
+        # TODO: save images into database as a message post as well.
+        
+        uploaded_file.save(save_path)
+
+    return redirect(url_for('board'))

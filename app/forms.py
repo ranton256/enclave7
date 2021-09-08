@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 
@@ -34,3 +34,9 @@ class RegistrationForm(FlaskForm):
 class PostForm(FlaskForm):
     body = StringField('Message', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+
+class UploadForm(FlaskForm):
+    # TODO: make sure file is requried.
+    file = FileField('File')
+    submit = SubmitField('Submit')
