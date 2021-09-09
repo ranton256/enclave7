@@ -1,9 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+	{# Images first for now #}
+	<h1>Images</h1>
+	<ul id="images">
+		{% for image in images %}
+		<li>
+			<div>
+				<img class="image-img" alt="{{image.filename}}" src="{{ url_for('upload', filename=image.filename) }}"/>
+				<span class="image-posted-on">
+				{{ image.timestamp|e7formatdatetime }}
+				</span>
+				<span class="image-posted-by">{{ image.username }}: </span>
+			</div>
+		</li>
+		{% endfor %}
+	</ul>
 	<h1>Messages</h1>
-	{# TODO: sort by oldest to newest #}
-	<ul>
+	<ul id="posts">
 		{% for post in posts %}
 		<li>
 		<span class="posted-on">

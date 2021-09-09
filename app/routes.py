@@ -1,7 +1,7 @@
-from flask import render_template, request, flash, redirect, url_for, send_from_directory
+from flask import render_template, request, flash, redirect, url_for, send_from_directory, abort
 from app import app
 from app.forms import LoginForm, RegistrationForm, PostForm
-from app.models import User, Post
+from app.models import User, Post, Image
 from app import db
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql import select
@@ -98,7 +98,7 @@ def board():
         flash('You posted {}'.format(post.body))
         # redirect to clear form
         return redirect(url_for('board'))
-    #posts = Post.query.all()
+
     s = select([User,Post]).where(Post.user_id == User.id)
     results = db.session.execute(s)
     posts = []
@@ -108,7 +108,20 @@ def board():
         post = dict_from_obj(p)
         post['username'] = u.username
         posts.append(post)
-    return render_template('board.html', title='Message Board', form=form, posts=posts)
+
+    # get images as well
+    s = select([User,Image]).where(Image.user_id == User.id)
+    results = db.session.execute(s)
+    images = []
+    for row in results:
+        u = row[0]
+        i = row[1]
+        image = dict_from_obj(i)
+        image['username'] = u.username
+        images.append(image)
+    # TODO: now interlave them, all sorted by timestamp.
+
+    return render_template('board.html', title='Message Board', form=form, posts=posts, images=images)
         
 # TODO: validate file contents as actual image.
 
@@ -131,18 +144,42 @@ def upload_image():
     print('your filename was', filename) # TODO: real log
 
     filename = secure_filename(filename)
+    
     print("filename is", filename)
+
     if filename != '':
+        # check that name is unique
+        image = Image.query.filter_by(filename=filename).first()
+        if image is not None:
+            # TODO: report error to user.
+            # TODO: should we just change the name for them to make it unique?
+            abort(400)
+
         file_ext = os.path.splitext(filename)[1]
         print("file_ext is", file_ext)
         if file_ext not in app.config['UPLOAD_EXTENSIONS']:
             abort(400)
+        # TODO: validate actual file contents as image.
+        # TODO: check maximum file size.
+
         save_path = os.path.join(app.config['UPLOAD_PATH'], filename)
         # TODO: real logging
         print("Saving uploaded file to", filename)
         flash('Your image was uploaded to {}'.format(url_for('upload', filename=filename)))
-        # TODO: save images into database as a message post as well.
-        
-        uploaded_file.save(save_path)
+        # Save images into database as a message post as well.
+        image = Image(filename=filename, user_id=current_user.id)
+        db.session.add(image)
+        db.session.commit()
+        # insert into database first so that we don't lose files taking up space if we have an error.
+        try:
+            uploaded_file.save(save_path)
+        except Exception as e:
+            # TODO: log properly
+            print("Error saving file to {}: {}".format(save_path, e))
+            # Delete the image row from database since couldn't save the file.
+            db.session.delete(image)
+            print("Deleted orphan image record")
+
+            abort(500)
 
     return redirect(url_for('board'))
