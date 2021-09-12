@@ -72,9 +72,13 @@
               </ul>
             </li>
           </ul>
-          <ul class="nav navbar-nav pull-right">
-            <li><a href="{{ url_for('register') }}">Signup</a></li>
+          <ul class="nav navbar-nav pull-right">        
+			{% if current_user.is_anonymous %}
+			<li><a href="{{ url_for('register') }}">Signup</a></li>
             <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% else %}
+             <li><a href="{{ url_for('logout') }}">Logout</a></li>
+             {% endif %}
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -82,10 +86,6 @@
 
     <!-- Begin page content -->
     <main id="content" role="main" class="container">
-
-	<!-- TODO: put this in the actual nav bar -->
-       
-
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
