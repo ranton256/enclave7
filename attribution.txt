@@ -1,0 +1,2 @@
+https://github.com/realpython/flask-boilerplate
+https://github.com/twbs/bootstrap

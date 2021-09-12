@@ -53,7 +53,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">Project name</a>
+          <a class="navbar-brand" href="/">Enclave7</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -84,15 +84,7 @@
     <main id="content" role="main" class="container">
 
 	<!-- TODO: put this in the actual nav bar -->
-        <div>
-            Enclave7:
-		    <a href="{{ url_for('index') }}">Home</a>
-			{% if current_user.is_anonymous %}
-			<a href="{{ url_for('login') }}">Login</a>
-			{% else %}
-			<a href="{{ url_for('logout') }}">Logout</a>
-			{% endif %}
-        </div>
+       
 
       {% with messages = get_flashed_messages() %}
         {% if messages %}
