@@ -23,18 +23,15 @@ def not_found_err(error):
 @app.route('/index')
 @login_required
 def index():
+    # TODO: cleanup this garbage
     user = {'username': 'Richard'}
     posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
     ]
     return render_template('index.html', title='Home', posts=posts)
+
+@app.route('/about')
+def about():
+    return render_template('about.html', title='About')
 
 
 @app.route('/login', methods=['GET', 'POST'])
