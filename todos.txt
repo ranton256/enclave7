@@ -1,0 +1,4 @@
+Setup Bootstrap and use it to style the web pages so they look nicer.
+Setup mysql database on server.
+Deploy it to our server, which will need production flask config with debug disabled and mysql instead of sqlite.
+Automate deploying to our server for new changes.
