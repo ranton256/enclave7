@@ -1,4 +1,8 @@
-Setup Bootstrap and use it to style the web pages so they look nicer.
-Setup mysql database on server.
-Deploy it to our server, which will need production flask config with debug disabled and mysql instead of sqlite.
-Automate deploying to our server for new changes.
+DONE: Setup Bootstrap and use it to style the web pages so they look nicer.
+DOEN: Setup mysql database on server.
+DONE: Deploy it to our server, which will need production flask config with debug disabled and mysql instead of sqlite.
+TODO: Automate deploying to our server for new changes.
+TODO: cleanup unused parts from menu in bootstrap
+TODO: generate image thumbnails and use those instead for the message board
+TODO: change the message board to sort images+messages together by timestamp.
+
